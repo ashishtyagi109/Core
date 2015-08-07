@@ -4,14 +4,17 @@
 
 #ifndef INCLUDED_CSTDBOOL
 #include <cstdbool>
+#define INCLUDED_CSTDBOOL
 #endif /* INCLUDED_CSTDBOOL */
 
 #ifndef INCLUDED_CSTDDEF
 #include <cstddef>
+#define INCLUDED_CSTDDEF
 #endif /* INCLUDED_CSTDDEF */
 
 #ifndef INCLUDED_CSTDINT
 #include <cstdint>
+#define INCLUDED_CSTDINT
 #endif /* INCLUDED_CSTDINT */
 
 // =======================================================================<DC>=
@@ -29,17 +32,16 @@ namespace Core
   namespace Literal
   {
     using Void = void;
-    using NullPointer = Void *;
+    using NullPointer = void *;
 
     using Byte = uint8_t;
     using Short = uint16_t;
     using HalfWord = uint32_t;
     using Word = uint64_t;
 
-    enum Boolean : uint8_t {
-      False = false,
-      True = true
-    };
+    using Boolean = bool;
+    const constexpr extern Boolean False = false;
+    const constexpr extern Boolean True = true;
 
     using Character = char;
 

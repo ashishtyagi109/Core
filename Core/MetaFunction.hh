@@ -1,0 +1,21 @@
+// MetaFunction.hh
+#ifndef INCLUDED_METAFUNCTION
+#define INCLUDED_METAFUNCTION
+
+#ifndef INCLUDED_CORE_METAFUNCTION_ARGUMENTTYPES
+#include <Core/MetaFunction/ArgumentTypes.hh>
+#endif /* INCLUDED_CORE_METAFUNCTION_ARGUMENTTYPES */
+
+#ifndef INCLUDED_CORE_METAFUNCTION_BASETYPE
+#include <Core/MetaFunction/BaseType.hh>
+#endif /* INCLUDED_CORE_METAFUNCTION_BASETYPE */
+
+#ifndef INCLUDED_CORE_METAFUNCTION_RETURNTYPE
+#include <Core/MetaFunction/ReturnType.hh>
+#endif /* INCLUDED_CORE_METAFUNCTION_RETURNTYPE */
+
+#ifndef INCLUDED_CORE_METAFUNCTION_TYPELIST
+#include <Core/MetaFunction/TypeList.hh>
+#endif /* INCLUDED_CORE_METAFUNCTION_TYPELIST */
+
+#endif /* INCLUDED_METAFUNCTION */

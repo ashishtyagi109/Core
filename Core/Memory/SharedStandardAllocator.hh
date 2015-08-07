@@ -1,14 +1,14 @@
-// StandardAllocator.hh
+// SharedStandardAllocator.hh
+#ifndef INCLUDED_CORE_MEMORY_SHAREDSTANDARDALLOCATOR
+#define INCLUDED_CORE_MEMORY_SHAREDSTANDARDALLOCATOR
+
+#ifndef INCLUDED_CORE_MEMORY_SHAREDPTR
+#include <Core/Memory/SharedPtr.hh>
+#endif /* INCLUDED_CORE_MEMORY_SHAREDPTR */
+
 #ifndef INCLUDED_CORE_MEMORY_STANDARDALLOCATOR
-#define INCLUDED_CORE_MEMORY_STANDARDALLOCATOR
-
-#ifndef INCLUDED_CORE_LITERAL_PRIMITIVE
-#include <Core/Literal/Primitive.hh>
-#endif /* INCLUDED_CORE_LITERAL_PRIMITIVE */
-
-#ifndef INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL
-#include <Core/Memory/AllocatorProtocol.hh>
-#endif /* INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL */
+#include <Core/Memory/StandardAllocator.hh>
+#endif /* INCLUDED_CORE_MEMORY_STANDARDALLOCATOR */
 
 // =======================================================================<DC>=
 // @PURPOSE:
@@ -22,39 +22,41 @@ namespace Core
 {
   namespace Memory
   {
+    auto PushSharedAllocator(const AllocatorProtocol &Allocator) -> Void;
+
+    auto PushSharedAllocator(AllocatorProtocol &&Allocator) -> Void;
+
+    auto GetSharedAllocator() -> SharedPtr<AllocatorProtocol>;
+
+    auto PopSharedAllocator() -> SharedPtr<AllocatorProtocol>;
+  }
+}
+// ============================================================================
+// IMPLEMENTATION
+// ============================================================================
+
+namespace Core
+{
+  namespace Memory
+  {
     // USING NAMESPACES --------------------------------------------------<UN>-
-    using namespace Core::Literal;
-
-    // ===================================================================<CL>=
-    // CLASS StandardAllocator
-    // ========================================================================
-
-    struct StandardAllocator final : public AllocatorProtocol
-    {
-    public:
-      // CREATORS --------------------------------------------------------<CR>-
-      StandardAllocator ();
-
-      // DESTRUCTORS -----------------------------------------------------<DS>-
-      virtual ~StandardAllocator ();
-
-      // MANIPULATORS ----------------------------------------------------<MA>-
-      virtual Void *Allocate (Size NumberOfBytesToAllocate);
-      virtual Void Deallocate (Void *Object);
-    };
-
-    // STATE -------------------------------------------------------------<ST>-
-    extern struct StandardAllocator StandardAllocator;
+    // USING TYPES -------------------------------------------------------<UT>-
+    // CREATORS ----------------------------------------------------------<CR>-
+    // DESTRUCTORS -------------------------------------------------------<DS>-
+    // ACCESSORS ---------------------------------------------------------<AC>-
+    // MANIPULATORS ------------------------------------------------------<MA>-
+    // OPERATORS ---------------------------------------------------------<OP>-
   }
 }
 
-#endif /* INCLUDED_CORE_MEMORY_STANDARDALLOCATOR */
+
+#endif /* INCLUDED_CORE_MEMORY_SHAREDSTANDARDALLOCATOR */
 
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:
 // Copyright (c) 2015. Nathan Burgers.
 //
-// Permission is hereby granted, free of charge, to any person obtaining a
+// Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
 // the rights to use, copy, modify, merge, publish, distribute, sublicense,

@@ -2,37 +2,72 @@
 #ifndef INCLUDED_CORE_MEMORY_FORWARD
 #define INCLUDED_CORE_MEMORY_FORWARD
 
-#ifndef INCLUDED_CORE_TYPETRAIT_BASETYPE
-#include <Core/TypeTrait/BaseType.hh>
-#endif /* INCLUDED_CORE_TYPETRAIT_BASETYPE */
+#ifndef INCLUDED_CORE_METAFUNCTION
+#include <Core/MetaFunction.hh>
+#endif /* INCLUDED_CORE_METAFUNCTION */
 
 namespace Core
 {
   namespace Memory
   {
     // USING NAMESPACES --------------------------------------------------<UN>-
-    using namespace Core::TypeTrait;
+    using namespace Core::MetaFunction;
 
     // MANIPULATORS ------------------------------------------------------<MA>-
     template <typename ElementType>
-    constexpr ElementType &&Forward (BaseType<ElementType> &Element);
+    auto constexpr Forward (BaseType<ElementType> &Element) -> ElementType &&;
 
     template <typename ElementType>
-    constexpr ElementType &&Forward (BaseType<ElementType> &&Element);
+    auto constexpr Forward (BaseType<ElementType> &&Element) -> ElementType &&;
 
     // ACCESSORS ---------------------------------------------------------<AC>-
     template <typename ElementType>
-    constexpr const ElementType &&
-    Forward (const BaseType<ElementType> &Element);
+    auto constexpr Forward (const BaseType<ElementType> &Element)
+      -> const ElementType &&;
 
     template <typename ElementType>
-    constexpr const ElementType &&
-    Forward (const BaseType<ElementType> &&Element);
+    auto constexpr Forward (const BaseType<ElementType> &&Element)
+      -> const ElementType &&;
   }
 }
 
-// IMPLEMENTATION --------------------------------------------------------<IM>-
-#include <Core/Memory/Forward.mm>
+// =======================================================================<IM>=
+// IMPLEMENTATION
+// ============================================================================
+
+namespace Core
+{
+  namespace Memory
+  {
+    // MANIPULATORS ------------------------------------------------------<MA>-
+    template <typename ElementType>
+    auto constexpr Forward (BaseType<ElementType> &Element) -> ElementType &&
+    {
+      return static_cast<BaseType<ElementType> &&> (Element);
+    }
+
+    template <typename ElementType>
+    auto constexpr Forward (BaseType<ElementType> &&Element) -> ElementType &&
+    {
+      return static_cast<BaseType<ElementType> &&> (Element);
+    }
+
+    // ACCESSORS ---------------------------------------------------------<AC>-
+    template <typename ElementType>
+    auto constexpr Forward (const BaseType<ElementType> &Element)
+      -> const ElementType &&
+    {
+      return static_cast<const BaseType<ElementType> &&> (Element);
+    }
+
+    template <typename ElementType>
+    auto constexpr Forward (const BaseType<ElementType> &&Element)
+      -> const ElementType &&
+    {
+      return static_cast<const BaseType<ElementType> &&> (Element);
+    }
+  }
+};
 
 #endif /* INCLUDED_CORE_MEMORY_FORWARD */
 
@@ -58,4 +93,3 @@ namespace Core
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // ============================================================================
-

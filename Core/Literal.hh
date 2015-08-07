@@ -1,52 +1,16 @@
-// AllocatorProtocol.mm
+// Literal.hh
+#ifndef INCLUDED_CORE_LITERAL
+#define INCLUDED_CORE_LITERAL
 
-namespace Core
-{
-  namespace Memory
-  {
-    // FREE MANIPULATORS -------------------------------------------------<FM>-
-    template <typename ElementType>
-    inline ElementType *
-    Allocate (AllocatorProtocol &Allocator)
-    {
-      return Allocator.Allocate (sizeof (ElementType));
-    }
+#ifndef INCLUDED_CORE_LITERAL_FUNCTION
+#include <Core/Literal/Function.hh>
+#endif /* INCLUDED_CORE_LITERAL_FUNCTION */
 
-    inline Void *
-    Allocate (AllocatorProtocol &Allocator, Size NumberOfBytesToAllocate)
-    {
-      return Allocator.Allocate (NumberOfBytesToAllocate);
-    }
+#ifndef INCLUDED_CORE_LITERAL_PRIMITIVE
+#include <Core/Literal/Primitive.hh>
+#endif /* INCLUDED_CORE_LITERAL_PRIMITIVE */
 
-    template <typename ElementType>
-    inline Void
-    Deallocate (AllocatorProtocol &Allocator, ElementType *Element)
-    {
-      Allocator.Deallocate (Element);
-    }
-
-    inline Void
-    Deallocate (AllocatorProtocol &Allocator, Void *Element)
-    {
-      Allocator.Deallocate (Element);
-    }
-  }
-}
-
-// MANIPULATORS ----------------------------------------------------------<MA>-
-inline Core::Literal::Void *
-operator new(Core::Literal::Size NumberOfBytesToAllocate,
-             Core::Memory::AllocatorProtocol &Allocator)
-{
-  return Allocator.Allocate (NumberOfBytesToAllocate);
-}
-
-inline Core::Literal::Void
-operator delete(Core::Literal::Void *Object,
-                Core::Memory::AllocatorProtocol &Allocator)
-{
-  Allocator.Deallocate (Object);
-}
+#endif /* INCLUDED_CORE_LITERAL */
 
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:

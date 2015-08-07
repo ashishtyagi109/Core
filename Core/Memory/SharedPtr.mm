@@ -1,52 +1,11 @@
-// AllocatorProtocol.mm
+// SharedPtr.mm
+#ifndef INCLUDED_CORE_MEMORY_FORWARD
+#include <Core/Memory/Forward.hh>
+#endif /* INCLUDED_CORE_MEMORY_FORWARD */
 
-namespace Core
-{
-  namespace Memory
-  {
-    // FREE MANIPULATORS -------------------------------------------------<FM>-
-    template <typename ElementType>
-    inline ElementType *
-    Allocate (AllocatorProtocol &Allocator)
-    {
-      return Allocator.Allocate (sizeof (ElementType));
-    }
-
-    inline Void *
-    Allocate (AllocatorProtocol &Allocator, Size NumberOfBytesToAllocate)
-    {
-      return Allocator.Allocate (NumberOfBytesToAllocate);
-    }
-
-    template <typename ElementType>
-    inline Void
-    Deallocate (AllocatorProtocol &Allocator, ElementType *Element)
-    {
-      Allocator.Deallocate (Element);
-    }
-
-    inline Void
-    Deallocate (AllocatorProtocol &Allocator, Void *Element)
-    {
-      Allocator.Deallocate (Element);
-    }
-  }
-}
-
-// MANIPULATORS ----------------------------------------------------------<MA>-
-inline Core::Literal::Void *
-operator new(Core::Literal::Size NumberOfBytesToAllocate,
-             Core::Memory::AllocatorProtocol &Allocator)
-{
-  return Allocator.Allocate (NumberOfBytesToAllocate);
-}
-
-inline Core::Literal::Void
-operator delete(Core::Literal::Void *Object,
-                Core::Memory::AllocatorProtocol &Allocator)
-{
-  Allocator.Deallocate (Object);
-}
+#ifndef INCLUDED_CORE_MEMORY_STANDARDALLOCATOR
+#include <Core/Memory/StandardAllocator.hh>
+#endif /* INCLUDED_CORE_MEMORY_STANDARDALLOCATOR */
 
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:

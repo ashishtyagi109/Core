@@ -1,14 +1,6 @@
-// StandardAllocator.hh
-#ifndef INCLUDED_CORE_MEMORY_STANDARDALLOCATOR
-#define INCLUDED_CORE_MEMORY_STANDARDALLOCATOR
-
-#ifndef INCLUDED_CORE_LITERAL_PRIMITIVE
-#include <Core/Literal/Primitive.hh>
-#endif /* INCLUDED_CORE_LITERAL_PRIMITIVE */
-
-#ifndef INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL
-#include <Core/Memory/AllocatorProtocol.hh>
-#endif /* INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL */
+// BaseType.hh
+#ifndef INCLUDED_CORE_METAFUNCTION_BASETYPE
+#define INCLUDED_CORE_METAFUNCTION_BASETYPE
 
 // =======================================================================<DC>=
 // @PURPOSE:
@@ -18,37 +10,71 @@
 // @DESCRIPTION:
 // ============================================================================
 
+namespace
+{
+  template <typename ElementType>
+  struct BaseTypeImp;
+}
+
 namespace Core
 {
-  namespace Memory
+  namespace MetaFunction
   {
-    // USING NAMESPACES --------------------------------------------------<UN>-
-    using namespace Core::Literal;
-
-    // ===================================================================<CL>=
-    // CLASS StandardAllocator
-    // ========================================================================
-
-    struct StandardAllocator final : public AllocatorProtocol
-    {
-    public:
-      // CREATORS --------------------------------------------------------<CR>-
-      StandardAllocator ();
-
-      // DESTRUCTORS -----------------------------------------------------<DS>-
-      virtual ~StandardAllocator ();
-
-      // MANIPULATORS ----------------------------------------------------<MA>-
-      virtual Void *Allocate (Size NumberOfBytesToAllocate);
-      virtual Void Deallocate (Void *Object);
-    };
-
-    // STATE -------------------------------------------------------------<ST>-
-    extern struct StandardAllocator StandardAllocator;
+    template <typename ElementType>
+    using BaseType = typename BaseTypeImp<ElementType>::Type;
   }
 }
 
-#endif /* INCLUDED_CORE_MEMORY_STANDARDALLOCATOR */
+// ============================================================================
+// IMPLEMENTATION
+// ============================================================================
+
+namespace
+{
+  template <typename ElementType>
+  struct BaseTypeImp<ElementType *>
+  {
+    using Type = ElementType;
+  };
+  
+  template <typename ElementType>
+  struct BaseTypeImp<ElementType &>
+  {
+    using Type = ElementType;
+  };
+  
+  template <typename ElementType>
+  struct BaseTypeImp<ElementType &&>
+  {
+    using Type = ElementType;
+  };
+  
+  template <typename ElementType>
+  struct BaseTypeImp<const ElementType *>
+  {
+    using Type = ElementType;
+  };
+  
+  template <typename ElementType>
+  struct BaseTypeImp<const ElementType *const>
+  {
+    using Type = ElementType;
+  };
+
+  template <typename ElementType>
+  struct BaseTypeImp<const ElementType &>
+  {
+    using Type = ElementType;
+  };
+
+  template <typename ElementType>
+  struct BaseTypeImp<const ElementType &&>
+  {
+    using Type = ElementType;
+  };
+}
+
+#endif /* INCLUDED_CORE_METAFUNCTION_BASETYPE */
 
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:
