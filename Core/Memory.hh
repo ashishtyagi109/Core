@@ -1,55 +1,25 @@
-// BaseType.mm
+// Memory.hh
 
-namespace
-{
-  template <typename ElementType>
-  struct BaseTypeImp
-  {
-    using Type = ElementType;
-  };
+#ifndef INCLUDED_CORE_MEMORY
+#define INCLUDED_CORE_MEMORY
 
-  template <typename ElementType>
-  struct BaseTypeImp<ElementType *>
-  {
-    using Type = ElementType;
-  };
+#ifndef INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL
+#include <Core/Memory/AllocatorProtocol.hh>
+#endif /* INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL */
 
-  template <typename ElementType>
-  struct BaseTypeImp<ElementType &>
-  {
-    using Type = ElementType;
-  };
+#ifndef INCLUDED_CORE_MEMORY_FORWARD
+#include <Core/Memory/Forward.hh>
+#endif /* INCLUDED_CORE_MEMORY_FORWARD */
 
-  template <typename ElementType>
-  struct BaseTypeImp<ElementType &&>
-  {
-    using Type = ElementType;
-  };
+#ifndef INCLUDED_CORE_MEMORY_STANDARDALLOCATOR
+#include <Core/Memory/StandardAllocator.hh>
+#endif /* INCLUDED_CORE_MEMORY_STANDARDALLOCATOR */
 
-  template <typename ElementType>
-  struct BaseTypeImp<const ElementType>
-  {
-    using Type = ElementType;
-  };
+#ifndef INCLUDED_CORE_MEMORY_UNIQUEPTR
+#include <Core/Memory/UniquePtr.hh>
+#endif /* INCLUDED_CORE_MEMORY_UNIQUEPTR */
 
-  template <typename ElementType>
-  struct BaseTypeImp<const ElementType *>
-  {
-    using Type = ElementType;
-  };
-
-  template <typename ElementType>
-  struct BaseTypeImp<const ElementType &>
-  {
-    using Type = ElementType;
-  };
-
-  template <typename ElementType>
-  struct BaseTypeImp<const ElementType &&>
-  {
-    using Type = ElementType;
-  };
-}
+#endif /* INCLUDED_CORE_MEMORY */
 
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:

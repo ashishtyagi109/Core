@@ -1,10 +1,14 @@
-// AllocatorProtocol.hh
-#ifndef INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL
-#define INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL
+// OwnershipPolicy.hh
+#ifndef INCLUDED_CORE_MEMORY_OWNERSHIPPOLICY
+#define INCLUDED_CORE_MEMORY_OWNERSHIPPOLICY
 
-#ifndef INCLUDED_CORE_LITERAL_PRIMITIVE
-#include <Core/Literal/Primitive.hh>
-#endif /* INCLUDED_CORE_LITERAL_PRIMITIVE */
+#ifndef INCLUDED_CORE_MEMORY_SHAREDPTR
+#include <Core/Memory/SharedPtr.hh>
+#endif /* INCLUDED_CORE_MEMORY_SHAREDPTR */
+
+#ifndef INCLUDED_CORE_MEMORY_UNIQUEPTR
+#include <Core/Memory/UniquePtr.hh>
+#endif /* INCLUDED_CORE_MEMORY_UNIQUEPTR */
 
 // =======================================================================<DC>=
 // @PURPOSE:
@@ -19,56 +23,42 @@ namespace Core
   namespace Memory
   {
     // USING NAMESPACES --------------------------------------------------<UN>-
-    using namespace Core::Literal;
-
+    using namespace Core::Memory;
+    // USING TYPES -------------------------------------------------------<UT>-
     // ===================================================================<CL>=
-    // CLASS AllocatorProtocol
+    // CLASS OwnershipPolicy
     // ========================================================================
 
-    struct AllocatorProtocol
+    template <typename ElementType>
+    struct SharedOwnershipPolicy final
     {
-    public:
-      // DESTRUCTORS -----------------------------------------------------<DS>-
-      virtual ~AllocatorProtocol ();
-
-      // MANIPULATORS ----------------------------------------------------<MA>-
-      virtual Void *Allocate (Size NumberOfBytesToAllocate) = 0;
-      virtual Void Deallocate (Void *Object) = 0;
+      struct Type
+      {
+	using Pointer = SharedPtr<ElementType>;
+      };
+      
     };
 
-    // FREE MANIPULATORS -------------------------------------------------<FM>-
     template <typename ElementType>
-    inline ElementType *Allocate (AllocatorProtocol &Allocator);
-
-    inline Void *Allocate (AllocatorProtocol &Allocator,
-			   Size NumberOfBytesToAllocate);
-
-    template <typename ElementType>
-    inline Void Deallocate (AllocatorProtocol &Allocator, ElementType *Element);
-
-    inline Void Deallocate (AllocatorProtocol &Allocator, Void *Element);
+    struct UniqueOwnershipPolicy final
+    {
+      struct Type
+      {
+	using Pointer = UniquePtr<ElementType>;
+      };
+    };
   }
 }
 
-// FREE MANIPULATORS -----------------------------------------------------<FM>-
-inline Core::Literal::Void *
-operator new(Core::Literal::Size NumberOfBytesToAllocate,
-             Core::Memory::AllocatorProtocol &Allocator);
-
-inline Core::Literal::Void
-operator delete(Core::Literal::Void *Object,
-                Core::Memory::AllocatorProtocol &Allocator);
-
 // IMPLEMENTATION --------------------------------------------------------<IM>-
-#include <Core/Memory/AllocatorProtocol.mm>
 
-#endif /* INCLUDED_MEMORY_ALLOCATORPROTOCOL */
+#endif /* INCLUDED_CORE_MEMORY_OWNERSHIPPOLICY */
 
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:
 // Copyright (c) 2015. Nathan Burgers.
 //
-// Permission is hereby granted, free of charge, to any person obtaining a
+// Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
 // the rights to use, copy, modify, merge, publish, distribute, sublicense,

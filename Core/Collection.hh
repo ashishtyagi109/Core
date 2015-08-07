@@ -1,18 +1,30 @@
-// UniquePtr.mm
-#ifndef INCLUDED_CORE_MEMORY_FORWARD
-#include <Core/Memory/Forward.hh>
-#endif /* INCLUDED_CORE_MEMORY_FORWARD */
+// Collection.hh
+#ifndef INCLUDED_CORE_COLLECTION
+#define INCLUDED_CORE_COLLECTION
 
-#ifndef INCLUDED_CORE_MEMORY_STANDARDALLOCATOR
-#include <Core/Memory/StandardAllocator.hh>
-#endif /* INCLUDED_CORE_MEMORY_STANDARDALLOCATOR */
+#ifndef INCLUDED_CORE_COLLECTION_ARRAY
+#include <Core/Collection/Array.hh>
+#endif /* INCLUDED_CORE_COLLECTION_ARRAY */
 
+#ifndef INCLUDED_CORE_COLLECTION_MAP
+#include <Core/Collection/Map.hh>
+#endif /* INCLUDED_CORE_COLLECTION_MAP */
+
+#ifndef INCLUDED_CORE_COLLECTION_SET
+#include <Core/Collection/Set.hh>
+#endif /* INCLUDED_CORE_COLLECTION_SET */
+
+#ifndef INCLUDED_CORE_COLLECTION_VECTOR
+#include <Core/Collection/Vector.hh>
+#endif /* INCLUDED_CORE_COLLECTION_VECTOR */
+
+#endif /* INCLUDED_CORE_COLLECTION */
 
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:
 // Copyright (c) 2015. Nathan Burgers.
 //
-// Permission is hereby granted, free of charge, to any person obtaining a
+// Permission is hereby granted, free of charge, to any person obtaining a 
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
 // the rights to use, copy, modify, merge, publish, distribute, sublicense,

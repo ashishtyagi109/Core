@@ -1,39 +1,5 @@
 // Forward.mm
 
-namespace Core
-{
-  namespace Memory
-  {
-    // MANIPULATORS ------------------------------------------------------<MA>-
-    template <typename ElementType>
-    constexpr ElementType &&Forward (BaseType<ElementType> &Element)
-    {
-      return static_cast<BaseType<ElementType>&&> (Element);
-    }
-
-    template <typename ElementType>
-    constexpr ElementType &&Forward (BaseType<ElementType> &&Element)
-    {
-      return static_cast<BaseType<ElementType>&&> (Element);
-    }
-
-    // ACCESSORS ---------------------------------------------------------<AC>-
-    template <typename ElementType>
-    constexpr const ElementType &&
-    Forward (const BaseType<ElementType> &Element)
-    {
-      return static_cast<const BaseType<ElementType>&&> (Element);
-    }
-
-    template <typename ElementType>
-    constexpr const ElementType &&
-    Forward (const BaseType<ElementType> &&Element)
-    {
-      return static_cast<const BaseType<ElementType>&&> (Element);
-    }
-  }
-};
-
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:
 // Copyright (c) 2015. Nathan Burgers.

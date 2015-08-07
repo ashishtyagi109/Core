@@ -2,13 +2,13 @@
 #ifndef INCLUDED_CORE_MEMORY_UNIQUEPTR
 #define INCLUDED_CORE_MEMORY_UNIQUEPTR
 
-#ifndef INCLUDED_CORE_LITERAL_PRIMITIVE
-#include <Core/Literal/Primitive.hh>
-#endif /* INCLUDED_CORE_LITERAL_PRIMITIVE */
+#ifndef INCLUDED_CORE_MEMORY_FORWARD
+#include <Core/Memory/Forward.hh>
+#endif /* INCLUDED_CORE_MEMORY_FORWARD */
 
-#ifndef INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL
-#include <Core/Memory/AllocatorProtocol.hh>
-#endif /* INCLUDED_CORE_MEMORY_ALLOCATORPROTOCOL */
+#ifndef INCLUDED_CORE_MEMORY_STANDARDALLOCATOR
+#include <Core/Memory/StandardAllocator.hh>
+#endif /* INCLUDED_CORE_MEMORY_STANDARDALLOCATOR */
 
 // =======================================================================<DC>=
 // @PURPOSE:
@@ -24,10 +24,11 @@ namespace Core
   {
     // USING NAMESPACES --------------------------------------------------<UN>-
     using namespace Core::Literal;
-    // USING TYPES -------------------------------------------------------<UT>-
+
     // ===================================================================<CL>=
     // CLASS UniquePtr
     // ========================================================================
+
     template <typename ElementType>
     struct UniquePtr final
     {
@@ -47,56 +48,203 @@ namespace Core
       constexpr UniquePtr ();
       constexpr UniquePtr (ElementType *Element);
       UniquePtr (UniquePtr &&Source);
+
       // DESTRUCTORS -----------------------------------------------------<DS>-
       ~UniquePtr ();
+
       // FRIEND ACCESSORS ------------------------------------------------<FA>-
-      friend inline constexpr ElementType &Reference (const UniquePtr &Self);
-      friend inline ElementType *Get (const UniquePtr &Self);
+      auto constexpr friend inline Reference (const UniquePtr &Self)
+        -> ElementType &;
+      auto friend inline Get (const UniquePtr &Self) -> ElementType *;
+
       // FRIEND MANIPULATORS ---------------------------------------------<FM>-
-      friend inline ElementType &Reference (UniquePtr &Self);
-      friend inline ElementType *Release (UniquePtr &Self);
-      friend inline Void Reset (UniquePtr &Self);
-      friend inline Void
-      Swap (UniquePtr &UniquePtrOne, UniquePtr &UniquePtrTwo);
+      auto friend inline Reference (UniquePtr &Self) -> ElementType &;
+      auto friend inline Release (UniquePtr &Self) -> ElementType *;
+      auto friend inline Reset (UniquePtr &Self) -> Void;
+      auto friend inline Swap (UniquePtr &UniquePtrOne,
+                               UniquePtr &UniquePtrTwo) -> Void;
+
       // OPERATORS -------------------------------------------------------<OP>-
-      UniquePtr &operator=(UniquePtr &&Source);
-      inline ElementType &operator*();
-      inline constexpr ElementType &operator*() const;
-      inline ElementType *operator->();
-      inline constexpr ElementType *operator->() const;
+      auto inline operator=(UniquePtr &&Source) -> UniquePtr &;
+      auto inline operator*() -> ElementType &;
+      auto inline operator -> () -> ElementType *;
+      auto constexpr inline operator*() const -> const ElementType &;
+      auto constexpr inline operator -> () const -> const ElementType *;
+
       // TRAITS ----------------------------------------------------------<TR>-
 
     private:
       // NOT IMPLEMENTED -------------------------------------------------<NI>-
       UniquePtr (const UniquePtr &Source) = delete;
-      UniquePtr &operator=(const UniquePtr &Source) = delete;
+      auto operator=(const UniquePtr &Source) -> UniquePtr & = delete;
     };
 
     // FREE CREATORS -----------------------------------------------------<FC>-
     template <typename ElementType, typename... ArgumentTypes>
-    UniquePtr<ElementType>
-    MakeUnique (AllocatorProtocol &Allocator, ArgumentTypes... Arguments);
+    auto MakeUnique (AllocatorProtocol &Allocator,
+                     ArgumentTypes... Arguments) -> UniquePtr<ElementType>;
 
     template <typename ElementType, typename... ArgumentTypes>
-    UniquePtr<ElementType> MakeUnique (ArgumentTypes... Arguments);
-    // FREE DESTRUCTORS --------------------------------------------------<FD>-
-    // ACCESSORS ---------------------------------------------------------<AC>-
-    // MANIPULATORS ------------------------------------------------------<MA>-
+    auto MakeUnique (ArgumentTypes... Arguments) -> UniquePtr<ElementType>;
+
     // FREE OPERATORS ----------------------------------------------------<FO>-
     template <typename ElementType>
-    inline constexpr Boolean
+    inline constexpr auto
     operator==(const UniquePtr<ElementType> &UniquePtrOne,
-               const UniquePtr<ElementType> &UniquePtrTwo);
+               const UniquePtr<ElementType> &UniquePtrTwo) -> Boolean;
 
     template <typename ElementType>
-    inline constexpr Boolean
+    inline constexpr auto
     operator!=(const UniquePtr<ElementType> &UniquePtrOne,
-               const UniquePtr<ElementType> &UniquePtrTwo);
+               const UniquePtr<ElementType> &UniquePtrTwo) -> Boolean;
   }
 }
 
-// IMPLEMENTATION --------------------------------------------------------<IM>-
-#include <Core/Memory/UniquePtr.mm>
+// =======================================================================<IM>=
+// IMPLEMENTATION
+// ============================================================================
+
+namespace Core
+{
+  namespace Memory
+  {
+    // CREATORS ----------------------------------------------------------<CR>-
+    template <typename ElementType>
+    constexpr UniquePtr<ElementType>::UniquePtr ()
+      : Element (nullptr)
+    {
+    }
+
+    template <typename ElementType>
+    constexpr UniquePtr<ElementType>::UniquePtr (ElementType *Element)
+      : Element (Element)
+    {
+    }
+
+    template <typename ElementType>
+    UniquePtr<ElementType>::UniquePtr (UniquePtr<ElementType> &&Source)
+      : Element (Source.Element)
+    {
+      Source.Element = nullptr;
+    }
+
+    // DESTRUCTORS -------------------------------------------------------<DS>-
+    template <typename ElementType>
+    UniquePtr<ElementType>::~UniquePtr ()
+    {
+      delete Element;
+    }
+
+    // FRIEND ACCESSORS --------------------------------------------------<FA>-
+    template <typename ElementType>
+    constexpr ElementType &
+    Reference (const UniquePtr<ElementType> &Self)
+    {
+      return *Self.Element;
+    }
+
+    template <typename ElementType>
+    ElementType *
+    Get (const UniquePtr<ElementType> &Self)
+    {
+      return Self.Element;
+    }
+
+    // FRIEND MANIPULATORS -----------------------------------------------<FM>-
+    template <typename ElementType>
+    ElementType &
+    Reference (UniquePtr<ElementType> &Self)
+    {
+      return *Self.Element;
+    }
+
+    template <typename ElementType>
+    ElementType *
+    Release (UniquePtr<ElementType> &Self)
+    {
+      auto Result = Self.Element;
+      Self.Element = CoreNull;
+      return Result;
+    }
+
+    template <typename ElementType>
+    Void
+    Reset (UniquePtr<ElementType> &Self)
+    {
+      Self.Element = CoreNull;
+    }
+
+    template <typename ElementType>
+    Void
+    Swap (UniquePtr<ElementType> &UniquePtrOne,
+          UniquePtr<ElementType> &UniquePtrTwo)
+    {
+      auto TemporaryElement = UniquePtrOne.Element;
+      UniquePtrOne.Element = UniquePtrTwo.Element;
+      UniquePtrTwo.Element = TemporaryElement;
+    }
+
+    // OPERATORS ---------------------------------------------------------<OP>-
+    template <typename ElementType>
+    ElementType &UniquePtr<ElementType>::operator*()
+    {
+      return *Element;
+    }
+
+    template <typename ElementType>
+    auto constexpr UniquePtr<ElementType>::
+    operator*() const -> const ElementType &
+    {
+      return *Element;
+    }
+
+    template <typename ElementType>
+    ElementType *UniquePtr<ElementType>::operator->()
+    {
+      return Element;
+    }
+
+    template <typename ElementType>
+    auto constexpr UniquePtr<ElementType>::
+    operator -> () const -> const ElementType *
+    {
+      return Element;
+    }
+
+    // FREE CREATORS -----------------------------------------------------<FC>-
+    template <typename ElementType, typename... ArgumentTypes>
+    UniquePtr<ElementType>
+    MakeUnique (AllocatorProtocol &Allocator, ArgumentTypes... Arguments)
+    {
+      auto Pointer = new (Allocator)
+        ElementType (Forward<ArgumentTypes...> (Arguments)...);
+      return UniquePtr<ElementType> (Pointer);
+    }
+
+    template <typename ElementType, typename... ArgumentTypes>
+    UniquePtr<ElementType> MakeUnique (ArgumentTypes... Arguments)
+    {
+      auto Pointer = new (StandardAllocator)
+        ElementType (Forward<ArgumentTypes...> (Arguments)...);
+      return UniquePtr<ElementType> (Pointer);
+    }
+
+    // FREE OPERATORS ----------------------------------------------------<FO>-
+    template <typename ElementType>
+    constexpr Boolean operator==(const UniquePtr<ElementType> &UniquePtrOne,
+                                 const UniquePtr<ElementType> &UniquePtrTwo)
+    {
+      return Get (UniquePtrOne) == Get (UniquePtrTwo);
+    }
+
+    template <typename ElementType>
+    constexpr Boolean operator!=(const UniquePtr<ElementType> &UniquePtrOne,
+                                 const UniquePtr<ElementType> &UniquePtrTwo)
+    {
+      return Get (UniquePtrOne) != Get (UniquePtrTwo);
+    }
+  }
+}
 
 #endif /* INCLUDED_CORE_MEMORY_UNIQUEPTR */
 

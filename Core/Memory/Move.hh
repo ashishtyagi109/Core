@@ -1,6 +1,10 @@
-// BaseType.hh
-#ifndef INCLUDED_CORE_TYPETRAIT_BASETYPE
-#define INCLUDED_CORE_TYPETRAIT_BASETYPE
+// Move.hh
+#ifndef INCLUDED_CORE_MEMORY_MOVE
+#define INCLUDED_CORE_MEMORY_MOVE
+
+#ifndef INCLUDED_CORE_METAFUNCTION
+#include <Core/MetaFunction.hh>
+#endif /* INCLUDED_CORE_METAFUNCTION */
 
 // =======================================================================<DC>=
 // @PURPOSE:
@@ -10,28 +14,48 @@
 // @DESCRIPTION:
 // ============================================================================
 
-namespace
-{
-  template <typename ElementType>
-  struct BaseTypeImp;
-}
-
 namespace Core
 {
-  namespace TypeTrait
+  namespace Memory
   {
-    // ===================================================================<CL>=
-    // Type Trait BaseType
-    // ========================================================================
+    // USING NAMESPACES --------------------------------------------------<UN>-
+    using namespace Core::MetaFunction;
+
+    // MANIPULATORS ------------------------------------------------------<MA>-
     template <typename ElementType>
-    using BaseType = typename BaseTypeImp<ElementType>::Type;
+    auto constexpr Move (ElementType &&Element) -> BaseType<ElementType> &&;
+
+    template <typename ElementType>
+    auto constexpr Move (const ElementType &&Element)
+      -> const BaseType<ElementType> &&;
   }
 }
 
-// IMPLEMENTATION --------------------------------------------------------<IM>-
-#include <Core/TypeTrait/BaseType.mm>
+// ============================================================================
+// IMPLEMENTATION
+// ============================================================================
 
-#endif /* INCLUDED_CORE_TYPETRAIT_BASETYPE */
+namespace Core
+{
+  namespace Memory
+  {
+    // MANIPULATORS ------------------------------------------------------<MA>-
+    template <typename ElementType>
+    auto constexpr Move (ElementType &&Element) -> BaseType<ElementType> &&
+    {
+      return static_cast<BaseType<ElementType &&>> (Element);
+    }
+
+    template <typename ElementType>
+    auto constexpr Move (const ElementType &&Element)
+      -> const BaseType<ElementType> &&
+    {
+      return static_cast<BaseType<const ElementType &&>> (Element);
+    }
+  }
+}
+
+#endif /* INCLUDED_CORE_MEMORY_MOVE */
 
 // =======================================================================<CP>=
 // COPYRIGHT NOTICE:
